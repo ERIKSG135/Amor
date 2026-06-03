@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solo para ti ❤️</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    
+    <!-- ELEMENTO DE AUDIO -->
+    <audio id="background-music" loop>
+        <source src="/music/pablo-alboran-solamente-tu-videoclip-oficial_XMQHc7QC.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- CONTROL DE MÚSICA FLOTANTE -->
+    <div id="music-control" onclick="toggleMusic()" style="position: fixed; bottom: 20px; right: 20px; z-index: 1000; background: white; padding: 10px; border-radius: 50%; box-shadow: 0 4px 10px rgba(0,0,0,0.1); cursor: pointer; width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem;">
+        🎵
+    </div>
+
+    <div id="card">
+        <!-- MODAL DE ERROR -->
+        <div id="error-modal">
+            <div class="modal-icon">🙊</div>
+            <h2 style="color: var(--primary); margin-bottom: 10px;">¡Ups!</h2>
+            <p>Esa no es la respuesta correcta... ¡Haz memoria, tú puedes!</p>
+            <button class="btn-retry" onclick="closeModal()">Intentar de nuevo</button>
+        </div>
+
+        <!-- MODAL DE RESPUESTA PREGUNTA 4 (ESTILO IGUAL AL DE ERROR) -->
+        <div id="frase-modal">
+            <div class="modal-icon">🤭</div>
+            <h2 style="color: var(--primary); margin-bottom: 10px;">¡Jeje!</h2>
+            <p style="font-weight: 600;">"Todas las digo diario..."</p>
+            <button class="btn-retry" onclick="closeFraseModal()">Continuar ❤️</button>
+        </div>
+
+        <!-- PANTALLA DE INICIO -->
+        <div id="step0" class="step active">
+            <h1>Hola, mi amor ❤️</h1>
+            <p style="font-size: 1.2rem; margin-bottom: 25px;">¿Estás lista para empezar?</p>
+            <button class="btn-next-final" onclick="startQuiz()" style="margin-top: 0; width: 100%; border-radius: 12px;">Comenzar</button>
+        </div>
+
+        <!-- PASOS DEL 1 AL 5 -->
+        <div id="step1" class="step">
+            <h1>Nivel 1: El inicio</h1>
+            <p>¿En qué mes comenzamos a hablar?</p>
+            <button class="btn-opt" onclick="next(1, 'wrong')">Diciembre</button>
+            <button class="btn-opt" onclick="next(1, 'wrong')">Enero</button>
+            <button class="btn-opt" onclick="next(1, 'correct')">Febrero</button>
+        </div>
+
+        <div id="step2" class="step">
+            <h1>Nivel 2: La cita</h1>
+            <p>¿Donde fue nuestra primera cita?</p>
+            <button class="btn-opt" onclick="next(2, 'wrong')">Jardín</button>
+            <button class="btn-opt" onclick="next(2, 'wrong')">Laguna "El Naranjal"</button>
+            <button class="btn-opt" onclick="next(2, 'correct')">Suchitlán</button>
+            <button class="btn-opt" onclick="next(2, 'wrong')">Laguna "La María"</button>
+        </div>
+
+        <div id="step3" class="step">
+            <h1>Nivel 3: El beso</h1>
+            <p>¿Donde fue nuestro primer beso?</p>
+            <button class="btn-opt" onclick="next(3, 'wrong')">Suchitlán</button>
+            <button class="btn-opt" onclick="next(3, 'wrong')">Zentralia</button>
+            <button class="btn-opt" onclick="next(3, 'correct')">Laguna "El Naranjal"</button>
+            <button class="btn-opt" onclick="next(3, 'wrong')">Comala</button>
+            <button class="btn-opt" onclick="next(3, 'wrong')">Quinta Fuentes</button>
+        </div>
+
+        <div id="step4" class="step">
+            <h1>Nivel 4: Mis frases</h1>
+            <p style="color: var(--primary); font-weight: 600; font-size: 0.95rem; margin-bottom: 10px; font-style: italic;">
+                ¡Lo estás haciendo increíble, amor! Ya casi lo logras... 🥰
+            </p>
+            <p>¿Palabra que digo diario?</p>
+            <button class="btn-opt" onclick="next(4, 'correct')">Algo bien</button>
+            <button class="btn-opt" onclick="next(4, 'correct')">Chale</button>
+            <button class="btn-opt" onclick="next(4, 'correct')">Te amo</button>
+            <button class="btn-opt" onclick="next(4, 'correct')">Te extraño</button>
+        </div>
+
+        <div id="step5" class="step">
+            <h1>Nivel 5: El detalle</h1>
+            <p>¿Nombre del primer regalo que me diste?</p>
+            <button class="btn-opt" onclick="next(5, 'wrong')">Toñito el marcianito</button>
+            <button class="btn-opt" onclick="next(5, 'wrong')">Pepe el pollo</button>
+            <button class="btn-opt" onclick="next(5, 'correct')">PolliBerto</button>
+            <button class="btn-opt" onclick="next(5, 'wrong')">Toñito el alien</button>
+        </div>
+
+        <div id="step6" class="step">
+            <h1>¡FELICIDADES! 🏆</h1>
+            <p>Has pasado la prueba perfectamente.<br>Se nota que guardas cada momento mi amor.</p>
+            <button class="btn-next-final" onclick="startSurprise()">Siguiente</button>
+        </div>
+
+        <!-- PANTALLA DE SORPRESA FINAL -->
+        <div id="stepFinal" class="step">
+            <div id="dynamic-text" class="typing" style="min-height: 80px; display: flex; align-items: center; justify-content: center; font-family: 'Dancing Script'; font-size: 1.8rem; color: var(--primary); padding: 0 10px;"></div>
+            
+            <div id="lugar-container" style="display:none;">
+                <img src="img/carro2.jpeg" id="fotoLugar" class="img-lugar" style="display:block; width:100%; border-radius:15px; border:3px solid var(--primary);">
+                
+                <div id="timer-container" style="margin-top: 10px; padding: 8px;">
+                    <p style="font-size: 0.8rem; margin-bottom: 5px; color: #666;">Llevamos compartiendo:</p>
+                    <div class="timer-grid">
+                        <div class="timer-item"><span id="days" class="timer-val">0</span><span class="timer-label">Días</span></div>
+                        <div class="timer-item"><span id="hours" class="timer-val">0</span><span class="timer-label">Hrs</span></div>
+                        <div class="timer-item"><span id="mins" class="timer-val">0</span><span class="timer-label">Min</span></div>
+                        <div class="timer-item"><span id="secs" class="timer-val">0</span><span class="timer-label">Seg</span></div>
+                    </div>
+                </div>
+                <p id="sub-text" style="margin-top:10px; font-size:0.9rem; font-weight:bold; color:var(--primary); font-style: italic;">"Quiero pasar el resto de mis dias a tu lado amor..."</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <script>
+        const misFotos = [
+            'img/img_1.jpeg', 
+            'img/img_2.jpeg',
+            'img/img3.jpeg',
+            'img/img4.jpeg',
+            'img/im5.jpeg',
+            'img/img6.jpeg',
+            'img/img7.jpeg',
+            'img/img8.jpeg',
+            'img/img9.jpeg',
+            'img/img10.jpeg',
+            'img/jardin.jpeg',
+            'img/quesera.jpeg',
+            'img/camar.jpeg',
+            'img/desay.jpeg',
+            'img/lagunaM.jpeg',
+            'img/lucca PM.jpeg'
+        ];
+
+        const fechaInicio = new Date(2026, 3, 21, 0, 0, 0); 
+        const music = document.getElementById('background-music');
+        let isPlaying = false;
+
+        function toggleMusic() {
+            if (isPlaying) { 
+                music.pause(); 
+                document.getElementById('music-control').innerHTML = '🔇'; 
+            } else { 
+                music.play(); 
+                document.getElementById('music-control').innerHTML = '🎵'; 
+            }
+            isPlaying = !isPlaying;
+        }
+
+        function startQuiz() {
+            document.getElementById('step0').classList.remove('active');
+            document.getElementById('step1').classList.add('active');
+        }
+
+        let savedCurrent = null;
+
+        function next(current, type) {
+            if(type === 'correct') {
+                if(current === 4) {
+                    // Muestra el modal con diseño en vez de la alerta molesta
+                    savedCurrent = current;
+                    document.getElementById('frase-modal').style.display = 'flex';
+                } else {
+                    document.getElementById(`step${current}`).classList.remove('active');
+                    document.getElementById(`step${current+1}`).classList.add('active');
+                }
+            } else {
+                document.getElementById('error-modal').style.display = 'flex';
+            }
+        }
+
+        function closeFraseModal() {
+            document.getElementById('frase-modal').style.display = 'none';
+            if (savedCurrent !== null) {
+                document.getElementById(`step${savedCurrent}`).classList.remove('active');
+                document.getElementById(`step${savedCurrent+1}`).classList.add('active');
+                savedCurrent = null;
+            }
+        }
+
+        function closeModal() { document.getElementById('error-modal').style.display = 'none'; }
+
+        function typeWriter(text, i, fnCallback) {
+            if (i < text.length) {
+                document.getElementById("dynamic-text").innerHTML = text.substring(0, i+1);
+                setTimeout(function() { typeWriter(text, i + 1, fnCallback) }, 80);
+            } else if (typeof fnCallback == 'function') {
+                setTimeout(fnCallback, 1500);
+            }
+        }
+
+        function startSurprise() {
+            if (!isPlaying) {
+                music.play().catch(e => console.log("Audio play blocked", e));
+                isPlaying = true;
+                document.getElementById('music-control').innerHTML = '🎵';
+            }
+
+            document.getElementById('step6').classList.remove('active');
+            document.getElementById('stepFinal').classList.add('active');
+            
+            setInterval(createPhoto, 1500);
+            setInterval(createHeart, 800);
+
+            typeWriter("Hoy es un día muy especial...", 0, function() {
+                typeWriter("Quiero que sepas que cada segundo a tu lado ha sido un regalo...", 0, function() {
+                    typeWriter("Me encantas por completo, eres mi persona favorita...", 0, function() {
+                        typeWriter("Gracias por hacerme tan feliz, eres lo mejor que me ha pasado...", 0, function() {
+                            typeWriter("Espero que estés lista para lo que viene, mi amor...", 0, function() {
+                                typeWriter("Busca este lugar:", 0, function() {
+                                    document.getElementById('lugar-container').style.display = 'block';
+                                    document.getElementById('dynamic-text').classList.remove('typing');
+                                    actualizarContador();
+                                    setInterval(actualizarContador, 1000);
+                                    confetti({
+                                        particleCount: 80,
+                                        spread: 60,
+                                        origin: { y: 0.6 },
+                                        scalar: 2,
+                                        shapes: ['text'],
+                                        shapeOptions: { text: { value: ['❤️', '💖', '💕', '✨'] } }
+                                    });
+                                });
+                            });
+                        });
+                    });
+                });
+            });
+        }
+
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.className = 'heart-rain';
+            heart.innerHTML = '❤️';
+            heart.style.left = Math.random() * 90 + 'vw';
+            const size = Math.random() * 1.5 + 1;
+            heart.style.fontSize = size + 'rem';
+            const duracion = Math.random() * 4 + 8;
+            heart.style.animationDuration = duracion + 's';
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), duracion * 1000);
+        }
+
+        function actualizarContador() {
+            const ahora = new Date();
+            const diff = ahora - fechaInicio;
+            const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const s = Math.floor((diff % (1000 * 60)) / 1000);
+            document.getElementById('days').innerText = d;
+            document.getElementById('hours').innerText = h;
+            document.getElementById('mins').innerText = m;
+            document.getElementById('secs').innerText = s;
+        }
+
+        function createPhoto() {
+            const img = document.createElement('img');
+            img.src = misFotos[Math.floor(Math.random() * misFotos.length)];
+            img.className = 'photo-rain';
+            img.style.left = Math.random() * 80 + 'vw';
+            const duracion = Math.random() * 4 + 8; 
+            img.style.animationDuration = duracion + 's';
+            document.body.appendChild(img);
+            setTimeout(() => img.remove(), duracion * 1000);
+        }
+    </script>
+</body>
+</html>
